@@ -1,0 +1,44 @@
+{
+  "SolverType": "IterativeLocalSearch",
+  "DataSource": "xml",
+  "ConnectionString": {
+    "DNS": "",
+    "Port": "",
+    "DBName": "",
+    "Username": "",
+    "Password": ""
+  },
+  "FileOperation": {
+    "InstancePath": "/Users/alipala/Projects/vrptw_py/data/input/",
+    "InstanceName": "C109_025.xml",
+    "OutputPath": "/Users/alipala/Projects/vrptw/VRPTW.SampleProblem/",
+    "OutputName": "output.json"
+  },
+  "SolverParam": {
+    "TimeLimit": 1800.0,
+    "MIPGap": 0.05,
+    "Threads": 1
+  },
+  "HeuristicsParam": {
+    "IterationCount": 200,
+    "InitialSolutionParam": {
+      "Alpha1": 0.50,
+      "Alpha2": 0.50,
+      "Mu": 1.0,
+      "Beta": 0.0
+    },
+    "SimulatedAnnealingParam": {
+      "InitialTemperature": 1000,
+      "Alpha": 0.95,
+      "IterationCount": 200
+    },
+    "TabuSearchParam": {
+      "TabuListSize": 5
+    },
+    "DiversificationParam": {
+      "NumberOfNonImprovingIters": 2,
+      "MinCustomersToRemove": 4,
+      "MaxCustomersToRemove": 8
+    }
+  }
+}
