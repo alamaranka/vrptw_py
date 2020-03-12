@@ -24,8 +24,8 @@ class XMLReader:
         vertex_ids = []
         quantities = []
         service_times = []
-        service_starts = []
-        service_ends = []
+        tw_starts = []
+        tw_ends = []
 
         for node in self.nodes:
             ids.append(node.getAttribute('id'))
@@ -41,11 +41,14 @@ class XMLReader:
             time_windows = request.getElementsByTagName('tw')
 
             for tw in time_windows:
-                service_starts.append(tw.getElementsByTagName('start')[0].firstChild.data)
-                service_ends.append(tw.getElementsByTagName('end')[0].firstChild.data)
+                tw_starts.append(tw.getElementsByTagName('start')[0].firstChild.data)
+                tw_ends.append(tw.getElementsByTagName('end')[0].firstChild.data)
+
+        max_travel_time = self.fleet[0].getElementsByTagName('vehicle_profile')[0] \
+            .getElementsByTagName('max_travel_time')[0].firstChild.data
 
         # no order for depot
-        orders.append(None)
+        orders.append(Order(tw_end=float(max_travel_time)))
 
         for i in range(len(order_ids)):
             order = Order(
@@ -53,8 +56,8 @@ class XMLReader:
                 vertex_id=int(vertex_ids[i]),
                 quantity=float(quantities[i]),
                 service_time=float(service_times[i]),
-                service_start=float(service_starts[i]),
-                service_end=float(service_ends[i])
+                tw_start=float(tw_starts[i]),
+                tw_end=float(tw_ends[i])
             )
 
             orders.append(order)
@@ -71,10 +74,12 @@ class XMLReader:
             vertices.append(vertex)
 
         # returning depot
-        max_travel_time = self.fleet[0].getElementsByTagName('vehicle_profile')[0] \
-            .getElementsByTagName('max_travel_time')[0].firstChild.data
-        returning_depot = vertices[0]
-        returning_depot.time_end = max_travel_time
+        order = Order(tw_end=float(max_travel_time))
+        starting_depot = [v for v in vertices if v.vertex_type == 0][0]
+        returning_depot = Vertex(vertex_type=0,
+                                 cx=starting_depot.cx,
+                                 cy=starting_depot.cy,
+                                 order=order)
         vertices.append(returning_depot)
 
         return vertices

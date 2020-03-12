@@ -12,27 +12,28 @@ class Vertex:
 class Order:
     def __init__(self, order_id=0, vertex_id=0,
                  quantity=0, service_time=0,
-                 service_start=0, service_end=0):
+                 tw_start=0, tw_end=0, service_start=0):
         self.order_id = order_id
         self.vertex_id = vertex_id
         self.quantity = quantity
         self.service_time = service_time
         self.service_start = service_start
-        self.service_end = service_end
+        self.tw_start = tw_start
+        self.tw_end = tw_end
 
 
-class Dataset:
+class InputData:
     def __init__(self, vertices=None, vehicles=None):
         self.vertices = vertices
         self.vehicles = vehicles
 
 
 class Route:
-    def __init__(self, vertices=None, vehicle=None,
-                 capacity=0, load=0, distance=0):
+    def __init__(self, route_id=0, vertices=None,
+                 vehicle=None, load=0, distance=0):
+        self.route_id = route_id
         self.vertices = vertices
         self.vehicle = vehicle
-        self.capacity = capacity
         self.load = load
         self.distance = distance
 
