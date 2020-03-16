@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/alipala/Projects/vrptw_py/venv"
+VIRTUAL_ENV="/Users/alipala/PycharmProjects/vrptw_py/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
