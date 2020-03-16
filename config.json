@@ -9,9 +9,9 @@
     "Password": ""
   },
   "FileOperation": {
-    "InstancePath": "/Users/alipala/Projects/vrptw_py/data/input/",
+    "InstancePath": "C:/Users/Ali/PycharmProjects/vrptw_py/data/input/",
     "InstanceName": "C109_025.xml",
-    "OutputPath": "/Users/alipala/Projects/vrptw/VRPTW.SampleProblem/",
+    "OutputPath": "C:/Users/Ali/PycharmProjects/vrptw_py/data/input/",
     "OutputName": "output.json"
   },
   "SolverParam": {

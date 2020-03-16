@@ -1,6 +1,7 @@
 from data.generators.xml import XMLReader
 from data.models import InputData
-from exact.cplex import CplexModel
+from heuristics.initial_solution.main \
+    import InitialSolutionConstructor
 
 xml_reader = XMLReader()
 
@@ -9,11 +10,8 @@ input_data = InputData(
     vehicles=xml_reader.get_vehicles()
 )
 
-# initial_solution = InitialSolutionConstructor(input_data)
-# routes = initial_solution.run()
-
-cplex_model = CplexModel(input_data)
-cplex_model.run()
+initial_solution = InitialSolutionConstructor(input_data)
+routes = initial_solution.run()
 
 print('end of line...')
 
