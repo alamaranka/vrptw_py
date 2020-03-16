@@ -1,7 +1,9 @@
 import xml.dom.minidom as xml_minidom
+import copy
 
 from data.config import Config
 from data.models import Vertex, Vehicle, Order
+from helpers.helpers import Helper
 
 
 class XMLReader:
@@ -16,71 +18,43 @@ class XMLReader:
     def get_vertices(self):
         vertices = []
         orders = []
-        ids = []
-        vertex_types = []
-        cx_s = []
-        cy_s = []
-        order_ids = []
-        vertex_ids = []
-        quantities = []
-        service_times = []
-        tw_starts = []
-        tw_ends = []
-
-        for node in self.nodes:
-            ids.append(node.getAttribute('id'))
-            vertex_types.append(node.getAttribute('type'))
-            cx_s.append(node.getElementsByTagName('cx')[0].firstChild.data)
-            cy_s.append(node.getElementsByTagName('cy')[0].firstChild.data)
 
         for request in self.requests:
-            order_ids.append(request.getAttribute('id'))
-            vertex_ids.append(request.getAttribute('node'))
-            quantities.append(request.getElementsByTagName('quantity')[0].firstChild.data)
-            service_times.append(request.getElementsByTagName('service_time')[0].firstChild.data)
-            time_windows = request.getElementsByTagName('tw')
+            order_id = int(request.getAttribute('id'))
+            vertex_id = int(request.getAttribute('node'))
+            quantity = float(request.getElementsByTagName('quantity')[0].firstChild.data)
+            service_time = float(request.getElementsByTagName('service_time')[0].firstChild.data)
+            time_window = request.getElementsByTagName('tw')[0]
+            tw_start = float(time_window.getElementsByTagName('start')[0].firstChild.data)
+            tw_end = float(time_window.getElementsByTagName('end')[0].firstChild.data)
 
-            for tw in time_windows:
-                tw_starts.append(tw.getElementsByTagName('start')[0].firstChild.data)
-                tw_ends.append(tw.getElementsByTagName('end')[0].firstChild.data)
-
-        max_travel_time = self.fleet[0].getElementsByTagName('vehicle_profile')[0] \
-            .getElementsByTagName('max_travel_time')[0].firstChild.data
-
-        # no order for depot
-        orders.append(Order(tw_end=float(max_travel_time)))
-
-        for i in range(len(order_ids)):
-            order = Order(
-                order_id=int(order_ids[i]),
-                vertex_id=int(vertex_ids[i]),
-                quantity=float(quantities[i]),
-                service_time=float(service_times[i]),
-                tw_start=float(tw_starts[i]),
-                tw_end=float(tw_ends[i])
-            )
+            order = Order(order_id=order_id,
+                          vertex_id=vertex_id,
+                          quantity=quantity,
+                          service_time=service_time,
+                          tw_start=tw_start,
+                          tw_end=tw_end)
 
             orders.append(order)
 
-        for i in range(len(ids)):
-            vertex = Vertex(
-                vertex_id=int(ids[i]),
-                vertex_type=int(vertex_types[i]),
-                cx=float(cx_s[i]),
-                cy=float(cy_s[i]),
-                order=orders[i]
-            )
+        for node in self.nodes:
+            vertex_id = int(node.getAttribute('id'))
+            vertex_type = int(node.getAttribute('type'))
+            cx = float(node.getElementsByTagName('cx')[0].firstChild.data)
+            cy = float(node.getElementsByTagName('cy')[0].firstChild.data)
+            order = Helper.get_first_or_default([o for o in orders if o.vertex_id == vertex_id])
+
+            vertex = Vertex(vertex_id=vertex_id,
+                            vertex_type=vertex_type,
+                            cx=cx, cy=cy, order=order)
 
             vertices.append(vertex)
 
-        # returning depot
-        order = Order(tw_end=float(max_travel_time))
-        starting_depot = [v for v in vertices if v.vertex_type == 0][0]
-        returning_depot = Vertex(vertex_type=0,
-                                 cx=starting_depot.cx,
-                                 cy=starting_depot.cy,
-                                 order=order)
-        vertices.append(returning_depot)
+        # prepare depots
+        depots = [v for v in vertices if v.vertex_type == 0]
+        for depot in depots:
+            depot.order = Order(vertex_id=depot.vertex_id)
+            vertices.append(copy.deepcopy(depot))
 
         return vertices
 
@@ -97,13 +71,16 @@ class XMLReader:
             .getElementsByTagName('departure_node')[0].firstChild.data
         arrival_node = self.fleet[0].getElementsByTagName('vehicle_profile')[0] \
             .getElementsByTagName('arrival_node')[0].firstChild.data
+        max_travel_time = self.fleet[0].getElementsByTagName('vehicle_profile')[0] \
+            .getElementsByTagName('max_travel_time')[0].firstChild.data
 
         for i in range(int(number_of_vehicles)):
             vehicle = Vehicle(
                 vehicle_type=int(vehicle_type),
                 capacity=float(capacity),
                 departure_node=int(departure_node),
-                arrival_node=int(arrival_node)
+                arrival_node=int(arrival_node),
+                tw_end=float(max_travel_time)
             )
 
             vehicles.append(vehicle)

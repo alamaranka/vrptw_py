@@ -60,3 +60,9 @@ class Helper:
         customers_in_new_order = route.vertices
         customers_in_new_order.insert(index, candidate_customer)
         return Helper.construct_route(route, customers_in_new_order)
+
+    @staticmethod
+    def get_first_or_default(lst):
+        if len(lst) == 0:
+            return None
+        return lst[0]
