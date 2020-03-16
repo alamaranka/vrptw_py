@@ -5,10 +5,7 @@ from heuristics.initial_solution.main \
 
 xml_reader = XMLReader()
 
-input_data = InputData(
-    vertices=xml_reader.get_vertices(),
-    vehicles=xml_reader.get_vehicles()
-)
+input_data = xml_reader.prepare_input_data()
 
 initial_solution = InitialSolutionConstructor(input_data)
 routes = initial_solution.run()

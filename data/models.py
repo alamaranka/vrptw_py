@@ -36,11 +36,11 @@ class Order:
 
 
 class Distance:
-    def __init__(self, vertex_id_start=0, vertex_id_end=0,
+    def __init__(self, vertex_id_from=0, vertex_id_to=0,
                  distance_length=0, distance_duration=0,
                  time_code=0):
-        self.vertex_id_start = vertex_id_start
-        self.vertex_id_end = vertex_id_end
+        self.vertex_id_from = vertex_id_from
+        self.vertex_id_to = vertex_id_to
         self.distance_length = distance_length
         self.distance_duration = distance_duration
         self.time_code = time_code

@@ -1,8 +1,9 @@
+import math
 import xml.dom.minidom as xml_minidom
 import copy
 
 from data.config import Config
-from data.models import Vertex, Vehicle, Order
+from data.models import Vertex, Vehicle, Order, Distance, InputData
 from helpers.helpers import Helper
 
 
@@ -14,6 +15,15 @@ class XMLReader:
         self.nodes = self.doc.getElementsByTagName('node')
         self.requests = self.doc.getElementsByTagName('request')
         self.fleet = self.doc.getElementsByTagName('fleet')
+
+    def prepare_input_data(self):
+        vertices = self.get_vertices()
+        vehicles = self.get_vehicles()
+        distances = XMLReader.get_distances(vertices)
+
+        return InputData(vertices=vertices,
+                         vehicles=vehicles,
+                         distances=distances)
 
     def get_vertices(self):
         vertices = []
@@ -86,3 +96,18 @@ class XMLReader:
             vehicles.append(vehicle)
 
         return vehicles
+
+    @staticmethod
+    def get_distances(vertices):
+        distances = []
+        for vertex_from in vertices:
+            for vertex_to in vertices:
+                if vertex_from.vertex_id != vertex_to.vertex_id:
+                    x_dist = vertex_from.cx - vertex_to.cx
+                    y_dist = vertex_from.cy - vertex_to.cy
+                    euclidean_distance = math.sqrt(math.pow(x_dist, 2) + math.pow(y_dist, 2))
+                    distance = Distance(vertex_id_from=vertex_from.vertex_id,
+                                        vertex_id_to=vertex_to.vertex_id,
+                                        distance_length=euclidean_distance)
+                    distances.append(distance)
+        return distances

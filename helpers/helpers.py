@@ -5,10 +5,16 @@ from data.models import Route
 
 class Helper:
     @staticmethod
-    def calculate_distance(v_start, v_end):
-        term1 = math.pow(v_start.cx - v_end.cx, 2)
-        term2 = math.pow(v_start.cy - v_end.cy, 2)
-        return math.sqrt(term1 + term2)
+    def calculate_distance(vertex_from, vertex_to, distances):
+        if distances is not None:
+            distance = Helper.get_first_or_default(
+                [d for d in distances if (d.vertex_id_from == vertex_from.vertex_id) &
+                                         (d.vertex_id_to == vertex_to.vertex_id)])
+            return distance.distance_length
+        else:
+            x_dist = vertex_from.cx - vertex_to.cx
+            y_dist = vertex_from.cy - vertex_to.cy
+            return math.sqrt(math.pow(x_dist, 2) + math.pow(y_dist, 2))
 
     @staticmethod
     def calculate_service_start(vertex_prev, vertex_next):
