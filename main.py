@@ -1,5 +1,4 @@
-from data.generators.xml import XMLReader
-from data.models import InputData
+from data.xml import XMLReader
 from heuristics.initial_solution.main \
     import InitialSolutionConstructor
 
