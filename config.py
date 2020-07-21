@@ -1,3 +1,6 @@
+from data.entity import *
+
+
 class ConnectionString:
     Server = ''
     Username = ''
@@ -6,7 +9,7 @@ class ConnectionString:
 
 
 class FileOperation:
-    InstancePath = 'data/xml/'
+    InstancePath = 'data/xml_files/'
     InstanceName = 'C109_025.xml'
     OutputPath = ''
     OutputName = 'output.json'
@@ -50,8 +53,8 @@ class HeuristicsParam:
 
 
 class Config:
-    SolverType = None  # solver type enum
-    DataSource = None  # dat source enum
+    AlgorithmType = AlgorithmType.IterativeLocalSearch
+    DataSource = DataSourceType.XML
     ConnectionString = ConnectionString()
     FileOperation = FileOperation()
     SolverParam = SolverParam()

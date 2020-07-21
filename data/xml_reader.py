@@ -1,17 +1,16 @@
-import math
-import xml.dom.minidom as xml_minidom
 import copy
+from xml.dom import minidom
 
-from data.config import Config
-from data.models import Vertex, Vehicle, Order, Distance, InputData
-from helpers.helpers import Helper
+from config import Config
+from data.model import Vertex, Vehicle, Order, Distance, InputData
+from helpers.helpers import *
 
 
-class XMLReader:
+class XmlReader:
     def __init__(self):
-        file_operation = Config.get_file_operation()
-        path = file_operation.instance_path + file_operation.instance_name
-        self.doc = xml_minidom.parse(path)
+        file_operation = Config.FileOperation
+        path = file_operation.InstancePath + file_operation.InstanceName
+        self.doc = minidom.parse(path)
         self.nodes = self.doc.getElementsByTagName('node')
         self.requests = self.doc.getElementsByTagName('request')
         self.fleet = self.doc.getElementsByTagName('fleet')
@@ -19,7 +18,7 @@ class XMLReader:
     def prepare_input_data(self):
         vertices = self.get_vertices()
         vehicles = self.get_vehicles()
-        distances = XMLReader.get_distances(vertices)
+        distances = XmlReader.get_distances(vertices)
 
         return InputData(vertices=vertices,
                          vehicles=vehicles,
@@ -52,7 +51,7 @@ class XMLReader:
             vertex_type = int(node.getAttribute('type'))
             cx = float(node.getElementsByTagName('cx')[0].firstChild.data)
             cy = float(node.getElementsByTagName('cy')[0].firstChild.data)
-            order = Helper.get_first_or_default([o for o in orders if o.vertex_id == vertex_id])
+            order = get_first_or_default([o for o in orders if o.vertex_id == vertex_id])
 
             vertex = Vertex(vertex_id=vertex_id,
                             vertex_type=vertex_type,

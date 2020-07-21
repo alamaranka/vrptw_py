@@ -1,5 +1,5 @@
-from data.models import Route
-from helpers.helpers import Helper
+from data.model import Route
+from helpers.helpers import *
 
 
 class InitialSolutionConstructor:
@@ -56,7 +56,7 @@ class InsertionHeuristics:
                       self.depot_to],
             vehicle=vehicle
         )
-        self.route = Helper.insert_customer(self.route,
+        self.route = insert_customer(self.route,
                                             self.get_seed_customer(),
                                             len(self.route.vertices) - 1)
 
@@ -64,7 +64,7 @@ class InsertionHeuristics:
         max_distance = 0.0
         seed_customer = None
         for customer in self.unvisited_customers:
-            distance = Helper.calculate_distance(self.depot_from, customer, self.distances)
+            distance = calculate_distance(self.depot_from, customer, self.distances)
             if distance > max_distance:
                 max_distance = distance
                 seed_customer = customer

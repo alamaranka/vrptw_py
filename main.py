@@ -1,12 +1,10 @@
-from data.xml import XMLReader
-from heuristics.initial_solution.main \
-    import InitialSolutionConstructor
+from config import Config
+from data.xml_reader import XmlReader
+from heuristics.initial import InitialSolutionConstructor
 
-xml_reader = XMLReader()
-
-input_data = xml_reader.prepare_input_data()
-
-initial_solution = InitialSolutionConstructor(input_data)
+config = Config()
+data = XmlReader().prepare_input_data()
+initial_solution = InitialSolutionConstructor(data)
 routes = initial_solution.run()
 
 print('end of line...')
